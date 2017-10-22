@@ -1,1 +1,6 @@
 .DS_Store
+*.json
+*.pem
+*.csr
+*.kubeconfig
+encryption-config.yaml
