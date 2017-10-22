@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker-machine rm -f controller-{0..1} worker-{0..2}
