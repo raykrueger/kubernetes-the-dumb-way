@@ -27,7 +27,7 @@ for instance in controller-0 controller-1 controller-2; do
       --etcd-cafile=/var/lib/kubernetes/ca.pem \
       --etcd-certfile=/var/lib/kubernetes/kubernetes.pem \
       --etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem \
-      --etcd-servers=https://$(docker-machine ip controller-0):2379,https://$(docker-machine ip controller-1):2379,https://$(docker-machine ip controller-1):2379 \
+      --etcd-servers=https://$(docker-machine ip controller-0):2379,https://$(docker-machine ip controller-1):2379,https://$(docker-machine ip controller-2):2379 \
       --event-ttl=1h \
       --experimental-encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \
       --insecure-bind-address=0.0.0.0 \
