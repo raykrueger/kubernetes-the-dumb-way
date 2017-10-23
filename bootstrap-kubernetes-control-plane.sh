@@ -43,4 +43,33 @@ for instance in controller-0 controller-1 controller-2; do
       --tls-cert-file=/var/lib/kubernetes/kubernetes.pem \
       --tls-private-key-file=/var/lib/kubernetes/kubernetes-key.pem \
       --v=2
+
+  docker-machine ssh ${instance} \
+    docker run -d --name kube-controller-manager --restart always \
+      -v /var/lib/kubernetes:/var/lib/kubernetes \
+      -v /var/log/kubernetes:/var/log \
+      --net container:kube-apiserver \
+      gcr.io/google_containers/kube-controller-manager-amd64:v1.8.1 /usr/local/bin/kube-controller-manager \
+        --address=0.0.0.0 \
+        --cluster-cidr=10.200.0.0/16 \
+        --cluster-name=kubernetes \
+        --cluster-signing-cert-file=/var/lib/kubernetes/ca.pem \
+        --cluster-signing-key-file=/var/lib/kubernetes/ca-key.pem \
+        --leader-elect=true \
+        --master=http://127.0.0.1:8080 \
+        --root-ca-file=/var/lib/kubernetes/ca.pem \
+        --service-account-private-key-file=/var/lib/kubernetes/ca-key.pem \
+        --service-cluster-ip-range=10.32.0.0/24 \
+        --v=2
+
+  docker-machine ssh ${instance} \
+    docker run -d --name kube-scheduler --restart always \
+      -v /var/lib/kubernetes:/var/lib/kubernetes \
+      -v /var/log/kubernetes:/var/log \
+      --net container:kube-apiserver \
+      gcr.io/google_containers/kube-scheduler-amd64:v1.8.1 /usr/local/bin/kube-scheduler \
+        --leader-elect=true \
+        --master=http://127.0.0.1:8080 \
+        --v=2
+
 done
