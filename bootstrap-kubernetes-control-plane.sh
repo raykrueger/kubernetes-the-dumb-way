@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
+
 for instance in controller-0 controller-1 controller-2; do
+
+  docker-machine ssh ${instance} "wget https://storage.googleapis.com/kubernetes-release/release/v1.8.1/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/."
+
   docker-machine ssh ${instance} "sudo mkdir -p /var/lib/kubernetes /var/log/kubernetes ; sudo chmod a+w /var/log/kubernetes"
   docker-machine ssh ${instance} sudo cp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem encryption-config.yaml /var/lib/kubernetes/
 
@@ -73,3 +77,41 @@ for instance in controller-0 controller-1 controller-2; do
         --v=2
 
 done
+
+cat <<EOF | docker-machine ssh controller-0 kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+  name: system:kube-apiserver-to-kubelet
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes/proxy
+      - nodes/stats
+      - nodes/log
+      - nodes/spec
+      - nodes/metrics
+    verbs:
+      - "*"
+EOF
+
+cat <<EOF | docker-machine ssh controller-0 kubectl apply -f -
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRoleBinding
+metadata:
+  name: system:kube-apiserver
+  namespace: ""
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: system:kube-apiserver-to-kubelet
+subjects:
+  - apiGroup: rbac.authorization.k8s.io
+    kind: User
+    name: kubernetes
+EOF
