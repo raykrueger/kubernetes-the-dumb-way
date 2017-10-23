@@ -5,7 +5,7 @@ create_hosts() {
   for n in {0..2} ; do
     name=${basename}-${n}
     printf "\n---Create ${name}\n"
-    docker-machine create -d virtualbox ${name}
+    docker-machine create -d virtualbox --virtualbox-disk-size 30000 ${name}
   done
 }
 

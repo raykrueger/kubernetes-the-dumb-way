@@ -7,7 +7,7 @@ for instance in controller-0 controller-1 controller-2; do
   docker-machine ssh ${instance} sudo cp ca.pem kubernetes-key.pem kubernetes.pem /etc/etcd/certs/
 
   docker-machine ssh ${instance} \
-    docker run -d -v /etc/etcd/certs:/etc/etcd/certs -v /var/lib/etcd:/var/lib/etcd -p 4001:4001 -p 2380:2380 -p 2379:2379 --name etcd quay.io/coreos/etcd:latest \
+    docker run -d --restart always -v /etc/etcd/certs:/etc/etcd/certs -v /var/lib/etcd:/var/lib/etcd -p 4001:4001 -p 2380:2380 -p 2379:2379 --name etcd quay.io/coreos/etcd:latest \
     /usr/local/bin/etcd \
     --name ${instance} \
     --cert-file=/etc/etcd/certs/kubernetes.pem \
