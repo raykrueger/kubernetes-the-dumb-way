@@ -6,6 +6,10 @@ create_hosts() {
     name=${basename}-${n}
     printf "\n---Create ${name}\n"
     docker-machine create -d virtualbox --virtualbox-disk-size 30000 ${name}
+
+    # TODO HACK This is a hack to get tce-load to install iptables/netfilter in
+    # boot2docker. The boot2docker devs got cute and changed the uname.
+    docker-machine ssh ${name} "sudo sed -i 's/KERNELVER=\$(uname -r)/KERNELVER=4.2.7-tinycore64/' /usr/bin/tce-load"
   done
 }
 
@@ -37,3 +41,7 @@ source install-etcd.sh
 # Bootstrapping the Kubernetes Control Plane
 # https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/08-bootstrapping-kubernetes-controllers.md
 source bootstrap-kubernetes-control-plane.sh
+
+# Bootstrapping the Kubernetes Workers
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/09-bootstrapping-kubernetes-workers.md
+source bootstrap-kubernetes-workers.sh

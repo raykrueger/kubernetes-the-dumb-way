@@ -4,3 +4,4 @@
 *.csr
 *.kubeconfig
 encryption-config.yaml
+bin
