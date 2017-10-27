@@ -50,3 +50,7 @@ source bootstrap-kubernetes-workers.sh
 # https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/11-pod-network-routes.md
 source network-routing.sh
 
+# Configure Kubectl
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/10-configuring-kubectl.md
+source configure-kubectl.sh
+
