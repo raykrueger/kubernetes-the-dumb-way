@@ -18,10 +18,11 @@ install_kube_thing() {
     sudo ln -sf /mnt/sda1/bin/${binary} /usr/local/bin/${binary}"
 }
 
-for instance in worker-0 worker-1 worker-2; do
+for i in {0..2}; do
+  instance=worker-$i
 
   docker-machine ssh ${instance} "sudo swapoff -a && tce-load -wi socat iptables bridge-utils && \
-    sudo ln -sf /usr/local/sbin/iptables /usr/local/bin/iptables"
+    sudo ln -sf /usr/local/sbin/iptables* /usr/local/bin/."
 
   docker-machine ssh ${instance} "sudo mkdir -p \
     /etc/cni/net.d \
@@ -56,7 +57,7 @@ cat <<EOF | docker-machine ssh ${instance} "cat > 10-bridge.conf"
     "ipam": {
         "type": "host-local",
         "ranges": [
-          [{"subnet": "10.200.20.0/24"}]
+          [{"subnet": "10.200.${i}.0/24"}]
         ],
         "routes": [{"dst": "0.0.0.0/0"}]
     }
@@ -77,6 +78,8 @@ EOF
   docker-machine ssh ${instance} "chmod +x nsenter && sudo mv nsenter /usr/local/bin/nsenter"
 
   echo "/usr/local/bin/kubelet \
+    --address=$(docker-machine ip ${instance}) \
+    --node-ip=$(docker-machine ip ${instance}) \
     --allow-privileged=true \
     --anonymous-auth=false \
     --authorization-mode=Webhook \
@@ -86,7 +89,7 @@ EOF
     --image-pull-progress-deadline=2m \
     --kubeconfig=/var/lib/kubelet/kubeconfig \
     --network-plugin=cni \
-    --pod-cidr=10.200.20.0/24 \
+    --pod-cidr=10.200.${i}.0/24 \
     --register-node=true \
     --runtime-request-timeout=15m \
     --tls-cert-file=/var/lib/kubelet/${instance}.pem \
@@ -105,6 +108,7 @@ EOF
   docker-machine ssh ${instance} "sudo mv kube-proxy.kubeconfig /var/lib/kube-proxy/kubeconfig"
   
   docker-machine scp kube-proxy.init ${instance}:.
+
   docker-machine ssh ${instance} "chmod +x kube-proxy.init && \
     sudo mv kube-proxy.init /etc/init.d/kube-proxy && \
     sudo /etc/init.d/kube-proxy start"

@@ -45,3 +45,8 @@ source bootstrap-kubernetes-control-plane.sh
 # Bootstrapping the Kubernetes Workers
 # https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/09-bootstrapping-kubernetes-workers.md
 source bootstrap-kubernetes-workers.sh
+
+# Configure Network Routing
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/11-pod-network-routes.md
+source network-routing.sh
+

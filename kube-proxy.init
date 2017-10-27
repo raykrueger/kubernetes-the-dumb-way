@@ -12,6 +12,7 @@
 dir="/root"
 cmd="/usr/local/bin/kube-proxy \
   --cluster-cidr=10.200.0.0/16 \
+  --bind-address=$(ifconfig eth1 | awk '/inet addr/{print substr($2,6)}')
   --kubeconfig=/var/lib/kube-proxy/kubeconfig \
   --proxy-mode=iptables \
   --v=2"
