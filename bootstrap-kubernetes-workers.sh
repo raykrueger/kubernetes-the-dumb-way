@@ -6,7 +6,7 @@ install_kube_thing() {
 
   if [ ! -f "bin/${binary}" ]; then
     mkdir -p bin
-    curl -L -o bin/${binary} https://storage.googleapis.com/kubernetes-release/release/v1.8.1/bin/linux/amd64/${binary}
+    curl -L -o bin/${binary} https://storage.googleapis.com/kubernetes-release/release/v1.8.2/bin/linux/amd64/${binary}
   fi
   
   docker-machine scp bin/${binary} ${instance}:/tmp/${binary}

@@ -3,7 +3,7 @@
 
 for instance in controller-0 controller-1 controller-2; do
 
-  docker-machine ssh ${instance} "wget https://storage.googleapis.com/kubernetes-release/release/v1.8.1/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/."
+  docker-machine ssh ${instance} "wget https://storage.googleapis.com/kubernetes-release/release/v1.8.2/bin/linux/amd64/kubectl && chmod +x kubectl && sudo mv kubectl /usr/local/bin/."
 
   docker-machine ssh ${instance} "sudo mkdir -p /var/lib/kubernetes /var/log/kubernetes ; sudo chmod a+w /var/log/kubernetes"
   docker-machine ssh ${instance} sudo cp ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem encryption-config.yaml /var/lib/kubernetes/
@@ -15,7 +15,7 @@ for instance in controller-0 controller-1 controller-2; do
       -p 6443:6443 -p 8080:8080 \
       -v /var/lib/kubernetes:/var/lib/kubernetes \
       -v /var/log/kubernetes:/var/log \
-      gcr.io/google_containers/kube-apiserver-amd64:v1.8.1 /usr/local/bin/kube-apiserver \
+      gcr.io/google_containers/kube-apiserver-amd64:v1.8.2 /usr/local/bin/kube-apiserver \
       --admission-control=Initializers,NamespaceLifecycle,NodeRestriction,LimitRanger,ServiceAccount,DefaultStorageClass,ResourceQuota \
       --advertise-address=${INTERNAL_IP} \
       --allow-privileged=true \
@@ -53,7 +53,7 @@ for instance in controller-0 controller-1 controller-2; do
       -v /var/lib/kubernetes:/var/lib/kubernetes \
       -v /var/log/kubernetes:/var/log \
       --net container:kube-apiserver \
-      gcr.io/google_containers/kube-controller-manager-amd64:v1.8.1 /usr/local/bin/kube-controller-manager \
+      gcr.io/google_containers/kube-controller-manager-amd64:v1.8.2 /usr/local/bin/kube-controller-manager \
         --address=0.0.0.0 \
         --cluster-cidr=10.200.0.0/16 \
         --cluster-name=kubernetes \
@@ -71,7 +71,7 @@ for instance in controller-0 controller-1 controller-2; do
       -v /var/lib/kubernetes:/var/lib/kubernetes \
       -v /var/log/kubernetes:/var/log \
       --net container:kube-apiserver \
-      gcr.io/google_containers/kube-scheduler-amd64:v1.8.1 /usr/local/bin/kube-scheduler \
+      gcr.io/google_containers/kube-scheduler-amd64:v1.8.2 /usr/local/bin/kube-scheduler \
         --leader-elect=true \
         --master=http://127.0.0.1:8080 \
         --v=2

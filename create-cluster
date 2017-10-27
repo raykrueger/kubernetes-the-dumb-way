@@ -5,7 +5,7 @@ create_hosts() {
   for n in {0..2} ; do
     name=${basename}-${n}
     printf "\n---Create ${name}\n"
-    docker-machine create -d virtualbox --virtualbox-disk-size 30000 ${name}
+    docker-machine create -d virtualbox --virtualbox-memory "2048" ${name}
 
     # TODO HACK This is a hack to get tce-load to install iptables/netfilter in
     # boot2docker. The boot2docker devs got cute and changed the uname.
