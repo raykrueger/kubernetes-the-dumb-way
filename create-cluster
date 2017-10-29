@@ -6,6 +6,7 @@ create_hosts() {
     name=${basename}-${n}
     printf "\n---Create ${name}\n"
     docker-machine create -d virtualbox --virtualbox-memory "2048" ${name}
+    [ $? -ne 0 ] && exit $?
 
     # TODO HACK This is a hack to get tce-load to install iptables/netfilter in
     # boot2docker. The boot2docker devs got cute and changed the uname.
@@ -54,3 +55,6 @@ source network-routing.sh
 # https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/10-configuring-kubectl.md
 source configure-kubectl.sh
 
+# Deploy DNS
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/12-dns-addon.md
+source deploy-kube-dns.sh
