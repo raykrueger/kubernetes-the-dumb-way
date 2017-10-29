@@ -153,3 +153,16 @@ cfssl gencert \
   -hostname=10.32.0.1,${KUBERNETES_PUBLIC_ADDRESS}127.0.0.1,kubernetes.default \
   -profile=kubernetes \
   kubernetes-csr.json | cfssljson -bare kubernetes
+
+for instance in worker-0 worker-1 worker-2; do
+  for file in ca.pem ${instance}-key.pem ${instance}.pem; do
+    docker-machine scp ${file} ${instance}:~/
+  done
+done
+
+for instance in controller-0 controller-1 controller-2; do
+  for file in ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem; do
+    docker-machine scp ${file} ${instance}:~/
+  done
+done
+

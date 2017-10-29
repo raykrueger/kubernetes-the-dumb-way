@@ -1,38 +1,15 @@
 #!/usr/bin/env bash
 
-create_hosts() {
-  basename=$1
-  for n in {0..2} ; do
-    name=${basename}-${n}
-    printf "\n---Create ${name}\n"
-    docker-machine create -d virtualbox --virtualbox-memory "2048" ${name}
-    [ $? -ne 0 ] && exit $?
-
-    # TODO HACK This is a hack to get tce-load to install iptables/netfilter in
-    # boot2docker. The boot2docker devs got cute and changed the uname.
-    docker-machine ssh ${name} "sudo sed -i 's/KERNELVER=\$(uname -r)/KERNELVER=4.2.7-tinycore64/' /usr/bin/tce-load"
-  done
-}
-
-create_hosts controller
-create_hosts worker
+# Create Hosts
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/03-compute-resources.md
+source create-hosts.sh
 
 # Provisioning a CA and Generating TLS Certificates
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/04-certificate-authority.md
 source gencerts.sh
 
-for instance in worker-0 worker-1 worker-2; do
-  for file in ca.pem ${instance}-key.pem ${instance}.pem; do
-    docker-machine scp ${file} ${instance}:~/
-  done
-done
-
-for instance in controller-0 controller-1 controller-2; do
-  for file in ca.pem ca-key.pem kubernetes-key.pem kubernetes.pem; do
-    docker-machine scp ${file} ${instance}:~/
-  done
-done
-
 # Generating Kubernetes Configuration Files for Authentication
+# https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/05-kubernetes-configuration-files.md
 source generate-kubeconfigs.sh
 
 # Bootstrapping the etcd Cluster
