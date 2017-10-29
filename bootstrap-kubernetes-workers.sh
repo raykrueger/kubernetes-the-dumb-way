@@ -20,6 +20,7 @@ install_kube_thing() {
 
 for i in {0..2}; do
   instance=worker-$i
+  instance_ip=$(docker-machine ip ${instance})
 
   docker-machine ssh ${instance} "sudo swapoff -a && tce-load -wi socat iptables bridge-utils && \
     sudo ln -sf /usr/local/sbin/iptables* /usr/local/bin/."
@@ -78,8 +79,8 @@ EOF
   docker-machine ssh ${instance} "chmod +x nsenter && sudo mv nsenter /usr/local/bin/nsenter"
 
   echo "/usr/local/bin/kubelet \
-    --address=$(docker-machine ip ${instance}) \
-    --node-ip=$(docker-machine ip ${instance}) \
+    --address=${instance_ip} \
+    --node-ip=${instance_ip} \
     --allow-privileged=true \
     --anonymous-auth=false \
     --authorization-mode=Webhook \
