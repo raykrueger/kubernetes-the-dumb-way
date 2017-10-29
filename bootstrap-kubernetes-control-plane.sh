@@ -39,6 +39,7 @@ for instance in controller-0 controller-1 controller-2; do
       --kubelet-client-certificate=/var/lib/kubernetes/kubernetes.pem \
       --kubelet-client-key=/var/lib/kubernetes/kubernetes-key.pem \
       --kubelet-https=true \
+      --kubelet-preferred-address-types=InternalIP,Hostname,ExternalIP \
       --runtime-config=api/all \
       --service-account-key-file=/var/lib/kubernetes/ca-key.pem \
       --service-cluster-ip-range=10.32.0.0/24 \
