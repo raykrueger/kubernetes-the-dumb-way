@@ -6,7 +6,7 @@ for i in {0..2}; do
 
     # Do not override the route to 'self', that breaks everything
     if [ "${instance}" != "${target}" ] ; then
-      docker-machine ssh ${instance} "sudo ip route add 10.200.${i}.0/24 via $(docker-machine ip worker-${i}) dev eth1 proto static"
+      docker-machine ssh ${instance} "sudo ip route add 10.200.${i}.0/24 via $(docker-machine ip worker-${i})"
     fi
   done
 done
