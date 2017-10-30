@@ -4,7 +4,7 @@
 KUBERNETES_PUBLIC_ADDRESS=$(docker-machine ip controller-0)
 
 for instance in worker-0 worker-1 worker-2; do
-  kubectl config set-cluster kubernetes-the-hard-way \
+  kubectl config set-cluster kubernetes-the-dumb-way \
     --certificate-authority=ca.pem \
     --embed-certs=true \
     --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
@@ -17,14 +17,14 @@ for instance in worker-0 worker-1 worker-2; do
     --kubeconfig=${instance}.kubeconfig
 
   kubectl config set-context default \
-    --cluster=kubernetes-the-hard-way \
+    --cluster=kubernetes-the-dumb-way \
     --user=system:node:${instance} \
     --kubeconfig=${instance}.kubeconfig
 
   kubectl config use-context default --kubeconfig=${instance}.kubeconfig
 done
 
-kubectl config set-cluster kubernetes-the-hard-way \
+kubectl config set-cluster kubernetes-the-dumb-way \
   --certificate-authority=ca.pem \
   --embed-certs=true \
   --server=https://${KUBERNETES_PUBLIC_ADDRESS}:6443 \
@@ -35,7 +35,7 @@ kubectl config set-credentials kube-proxy \
   --embed-certs=true \
   --kubeconfig=kube-proxy.kubeconfig
 kubectl config set-context default \
-  --cluster=kubernetes-the-hard-way \
+  --cluster=kubernetes-the-dumb-way \
   --user=kube-proxy \
   --kubeconfig=kube-proxy.kubeconfig
 kubectl config use-context default --kubeconfig=kube-proxy.kubeconfig
