@@ -17,7 +17,7 @@ Me. I wrote the code for me. I wrote the README for you.
 ## The Steps
 
 1. [Install Docker for Mac](https://store.docker.com/editions/community/docker-ce-desktop-mac)
-1. [Install Virtual Box](https://www.virtualbox.org/)
+1. [Install VirtualBox](https://www.virtualbox.org/)
 1. [Install cfssl and cfssljson](https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/02-client-tools.md#os-x)
 1. [Install kubectl](https://github.com/kelseyhightower/kubernetes-the-hard-way/blob/master/docs/02-client-tools.md#os-x-1)
 1. Clone this repo
